@@ -9,7 +9,7 @@ var config = {
   physics: {
       default: 'arcade',
       arcade: {
-          gravity: { y: 1000 },
+          gravity: { y: 2000 },
           debug: false
       }
   },
@@ -20,10 +20,12 @@ var config = {
   }
 };
 
-
 var player;
 var platforms;
 var cursors;
+//velocity[0] is velocity x and velocity[1] is velocity y
+var velocity = [0,0];
+
 
 var game = new Phaser.Game(config);
 
@@ -40,11 +42,11 @@ function preload ()
 function create ()
 {
   //make sky
-  this.add.image(400, 300, 'sky');
+  this.add.image(950, 540, 'sky');
 
   platforms = this.physics.add.staticGroup();
 
-  platforms.create(300, 568, 'ground').setScale(4).refreshBody();
+  platforms.create(950, 700, 'ground').setScale(10).refreshBody();
 
   //player create
   player = this.physics.add.sprite(100, 350, 'dude');
@@ -87,28 +89,40 @@ function create ()
 
 function update ()
 {
+
   //player physics
   if (cursors.left.isDown)
   {
-    player.setVelocityX(-200);
+    velocity[0]-=100;
+    player.setVelocityX(velocity[0]);
 
     player.anims.play('left', true);
   }
   else if (cursors.right.isDown)
   {
-    player.setVelocityX(200);
+    velocity[0]+=100;
+    player.setVelocityX(velocity[0]);
 
     player.anims.play('right', true);
   }
   else
   {
-    player.setVelocityX(0);
+    velocity[0]*=.7;
+    player.setVelocityX(velocity[0]);
 
     player.anims.play('turn');
   }
-
   if (cursors.up.isDown && player.body.touching.down)
   {
-    player.setVelocityY(-500);
+    player.setVelocityY(-800);
+  }
+  //velocity capps
+  if (velocity[0]>600) 
+  {
+    velocity[0]=600;
+  }
+  if (velocity[0]<-600)
+  {
+    velocity[0]=-600;
   }
 }
