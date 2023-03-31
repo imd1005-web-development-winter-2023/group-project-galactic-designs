@@ -2,72 +2,113 @@
 //  JS File
 //  You may remove the code below - it's just boilerplate
 //
-
-//
-// Variables
-//
-
-// Constants
-const appID = "app";
-const headingText = "Develop. Preview. Ship.";
-const headingTextIcon = "🚀";
-const projectDueDate = "11 April 2023 11:59";
-
-// Variables
-let countdownDate = new Date(projectDueDate);
-
-// DOM Elements
-let appContainer = document.getElementById(appID);
-
-//
-// Functions
-//
-
-function calculateDaysLeft(countdownDate) {
-  const now = new Date().getTime();
-  const countdown = new Date(countdownDate).getTime();
-
-  const difference = (countdown - now) / 1000;
-
-  // Countdown passed already
-  if (difference < 1) {
-    return null;
+var config = {
+  type: Phaser.AUTO,
+  width: 1900,
+  height: 1080,
+  physics: {
+      default: 'arcade',
+      arcade: {
+          gravity: { y: 1000 },
+          debug: false
+      }
+  },
+  scene: {
+      preload: preload,
+      create: create,
+      update: update
   }
+};
 
-  const days = Math.floor(difference / (60 * 60 * 24));
 
-  return days;
+var player;
+var platforms;
+var cursors;
+
+var game = new Phaser.Game(config);
+
+function preload ()
+{
+  this.load.image('ground', 'images/platform.png');
+  this.load.image('sky', 'images/backround.jpg');
+  
+  this.load.spritesheet('dude', 
+  'images/placeholder.png',
+  { frameWidth: 200, frameHeight: 100 });
 }
 
-// Add a heading to the app container
-function inititialise() {
-  // If anything is wrong with the app container then end
-  if (!appContainer) {
-    console.error("Error: Could not find app contianer");
-    return;
-  }
+function create ()
+{
+  //make sky
+  this.add.image(400, 300, 'sky');
 
-  // Create an h1 and add it to our app
-  const h1 = document.createElement("h1");
-  const daysLeft = calculateDaysLeft(countdownDate);
-  let headingTextCalculated = headingText;
+  platforms = this.physics.add.staticGroup();
 
-  if (daysLeft) {
-    headingTextCalculated = headingTextCalculated.concat(
-      " In ",
-      daysLeft.toString(),
-      " days "
-    );
-  }
-  h1.textContent = headingTextCalculated.concat(headingTextIcon);
-  appContainer.appendChild(h1);
+  platforms.create(300, 568, 'ground').setScale(4).refreshBody();
 
-  // Init complete
-  console.log("App successfully initialised");
+  //player create
+  player = this.physics.add.sprite(100, 350, 'dude');
+
+  
+  player.setCollideWorldBounds(true);
+
+  this.anims.create({
+    key: 'left',
+    frames: [ { key: 'dude', frame: 1 } ],
+    frameRate: 10,
+  });
+
+  this.anims.create({
+    key: 'turn',
+    frames: [ { key: 'dude', frame: 1 } ],
+    frameRate: 20
+  });
+
+  this.anims.create({
+    key: 'right',
+    frames: [ { key: 'dude', frame: 1 } ],
+    frameRate: 10
+  });
+
+
+  //for actual animations
+  // this.anims.create({
+  //     key: 'right',
+  //     frames: this.anims.generateFrameNumbers('dude', { start: 5, end: 8 }),
+  //     frameRate: 10,
+  //     repeat: -1
+  // });
+
+  this.physics.add.collider(player, platforms);
+
+  //for movement of character
+  cursors = this.input.keyboard.createCursorKeys();
 }
 
-//
-// Inits & Event Listeners
-//
+function update ()
+{
+  //player physics
+  if (cursors.left.isDown)
+  {
+    player.setVelocityX(-200);
 
-inititialise();
+    player.anims.play('left', true);
+  }
+  else if (cursors.right.isDown)
+  {
+    player.setVelocityX(200);
+
+    player.anims.play('right', true);
+  }
+  else
+  {
+    player.setVelocityX(0);
+
+    player.anims.play('turn');
+  }
+
+  if (cursors.up.isDown && player.body.touching.down)
+  {
+    player.setVelocityY(-500);
+  }
+}
