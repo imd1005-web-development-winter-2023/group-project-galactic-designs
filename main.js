@@ -31,9 +31,14 @@ var game = new Phaser.Game(config);
 
 function preload ()
 {
+  //keyboard input variables
+  keyD = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.D);
+
+  //load images
   this.load.image('ground', 'images/platform.png');
   this.load.image('sky', 'images/backround.jpg');
   
+  //load spritesheet
   this.load.spritesheet('dude', 
   'images/placeholder.png',
   { frameWidth: 200, frameHeight: 100 });
@@ -104,6 +109,14 @@ function update ()
     player.setVelocityX(velocity[0]);
 
     player.anims.play('right', true);
+  } 
+  else if (!player.body.touching.down)
+  {
+    velocity[0]*=.95;
+
+    player.setVelocityX(velocity[0]);
+
+    player.anims.play('turn');
   }
   else
   {
@@ -116,6 +129,13 @@ function update ()
   {
     player.setVelocityY(-800);
   }
+  if (keyD.isDown)
+  {
+    //todo add animation
+
+    
+  }
+
   //velocity capps
   if (velocity[0]>600) 
   {
