@@ -239,11 +239,11 @@ function update ()
 
 
   //animations
-  if(player.body.touching.down===true && velocity[0]<-0.1)
+  if(player.body.touching.down===true && velocity[0]<-3)
   {
     player.anims.play('left',true);
   }
-  else if(player.body.touching.down===true && velocity[0]>0.1)
+  else if(player.body.touching.down===true && velocity[0]>3)
   {
     player.anims.play('right',true);
   }
