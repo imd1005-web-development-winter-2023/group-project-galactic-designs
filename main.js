@@ -25,6 +25,7 @@ var platforms;
 var cursors;
 //velocity[0] is velocity x and velocity[1] is velocity y
 var velocity = [0,0];
+var velocityCap=600;
 
 
 var game = new Phaser.Game(config);
@@ -40,8 +41,8 @@ function preload ()
   
   //load spritesheet
   this.load.spritesheet('dude', 
-  'images/placeholder.png',
-  { frameWidth: 200, frameHeight: 100 });
+  'images/Princess_Lemon-Sheet.png',
+  { frameWidth: 60, frameHeight: 96 });
 }
 
 function create ()
@@ -66,24 +67,47 @@ function create ()
   });
 
   this.anims.create({
-    key: 'turn',
-    frames: [ { key: 'dude', frame: 1 } ],
+    key: 'turnR',
+    frames: [ { key: 'dude', frame: 0 } ],
+    frameRate: 20
+  });
+
+  this.anims.create({
+    key: 'turnL',
+    frames: [ { key: 'dude', frame: 0 } ],
     frameRate: 20
   });
 
   this.anims.create({
     key: 'right',
-    frames: [ { key: 'dude', frame: 1 } ],
+    frames: this.anims.generateFrameNumbers('dude', { start: 5, end: 8 }),
     frameRate: 10
+  });
+  this.anims.create({
+    key: 'jump1',
+    frames: [ { key: 'dude', frame: 1 } ],
+    frameRate: 1
+  });
+
+  this.anims.create({
+    key: 'jump2',
+    frames: [ { key: 'dude', frame: 2 } ],
+    frameRate: 1
+  });
+
+  this.anims.create({
+    key: 'jump3',
+    frames: [ { key: 'dude', frame: 3 } ],
+    frameRate: 1
   });
 
 
   //for actual animations
   // this.anims.create({
-  //     key: 'right',
-  //     frames: this.anims.generateFrameNumbers('dude', { start: 5, end: 8 }),
-  //     frameRate: 10,
-  //     repeat: -1
+  //   key: 'right',
+  //   frames: this.anims.generateFrameNumbers('dude', { start: 5, end: 8 }),
+  //   frameRate: 10,
+  //   repeat: -1
   // });
 
   this.physics.add.collider(player, platforms);
@@ -94,8 +118,13 @@ function create ()
 
 function update ()
 {
-
   //player physics
+
+  if (player.body.touching.down)
+  {
+    velocityCap=600;
+  }
+  
   if (cursors.left.isDown)
   {
     velocity[0]-=100;
@@ -128,21 +157,24 @@ function update ()
   if (cursors.up.isDown && player.body.touching.down)
   {
     player.setVelocityY(-800);
+    player.anims.play('jump')
   }
-  if (keyD.isDown)
+  if (keyD.isDown&&player.body.touching.down)
   {
     //todo add animation
 
-    
+    player.setVelocityY(-600);
+
+    velocityCap=900;
   }
 
   //velocity capps
-  if (velocity[0]>600) 
+  if (velocity[0]>velocityCap) 
   {
-    velocity[0]=600;
+    velocity[0]=velocityCap;
   }
-  if (velocity[0]<-600)
+  if (velocity[0]<-velocityCap)
   {
-    velocity[0]=-600;
+    velocity[0]=-velocityCap;
   }
 }
