@@ -133,9 +133,10 @@ function create ()
 
   //create camera
 
-  this.cameras.main.setSize(1900, 1080);
+  mainCamera=this.cameras.main.setSize(1900, 1080);
 
-  mainCamera = this.cameras.add(0, 0, 1900, 1080);
+  mainCamera.setBounds(0,0,11900,1080,false)
+
 
   //add collision
   this.physics.add.collider(player, platforms);
@@ -183,7 +184,7 @@ function update ()
   {
     velocity[0]+=50;
     player.setVelocityX(velocity[0]);
-  } 
+  }
   else if (!player.body.touching.down)
   {
     velocity[0]*=.95;
@@ -210,19 +211,23 @@ function update ()
     velocity[1]-=800;
     player.setVelocityY(velocity[1]);
   }
-  else if (keyD.isDown&&player.body.touching.down)
+  else if (keyD.isDown&&player.body.touching.down&&cursors.right.isDown)
   {
-    //todo add animation
     velocity[1]-=600;
     player.setVelocityY(velocity[1]);
     velocityCap=900;
-    if (rotationL===true){
-      velocity[0]=- 900;
-    } 
-    else if (rotationL===false)
-    {
-      velocity[0]=900;
-    }
+
+    velocity[0]=900;
+    player.setVelocityX(velocity[0]);
+  }
+  else if (keyD.isDown&&player.body.touching.down&&cursors.left.isDown)
+  {
+    velocity[1]-=600;
+    player.setVelocityY(velocity[1]);
+    velocityCap=900;
+
+    velocity[0]=-900;
+    player.setVelocityX(velocity[0]);
   }
 
   //velocity capps
@@ -275,7 +280,6 @@ function update ()
 
 
   //camera
-
   if (rotationL)
   {
     cameraSmooth-=10;
@@ -286,7 +290,12 @@ function update ()
     cameraSmooth+=10;
     mainCamera.scrollX = (player.x-950+cameraSmooth)|0;
   }
-  
+
+  if(mainCamera.x<0)
+  {
+    mainCamera.scrollX = (0)|0;
+  }
+
   if(cameraSmooth>cameraCap)
   {
     cameraSmooth=cameraCap;
