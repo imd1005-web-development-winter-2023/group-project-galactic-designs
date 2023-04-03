@@ -211,6 +211,12 @@ function update ()
     velocity[1]-=800;
     player.setVelocityY(velocity[1]);
   }
+  else if (keyD.isDown&&player.body.touching.down&&cursors.right.isDown&&cursors.left.isDown)
+  {
+    velocity[1]-=600;
+    player.setVelocityY(velocity[1]);
+    velocityCap=900;
+  }
   else if (keyD.isDown&&player.body.touching.down&&cursors.right.isDown)
   {
     velocity[1]-=600;
