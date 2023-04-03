@@ -4,7 +4,7 @@
 //
 var config = {
   type: Phaser.AUTO,
-  width: 1900,
+  width: 11900,
   height: 1080,
   physics: {
       default: 'arcade',
@@ -27,6 +27,8 @@ var cursors;
 var velocity = [0,0];
 var velocityCap=600;
 var rotationL=false;
+var cameraSmooth=0;
+const cameraCap=150;
 
 
 var game = new Phaser.Game(config);
@@ -129,6 +131,13 @@ function create ()
   //   repeat: -1
   // });
 
+  //create camera
+
+  this.cameras.main.setSize(1900, 1080);
+
+  mainCamera = this.cameras.add(0, 0, 1900, 1080);
+
+  //add collision
   this.physics.add.collider(player, platforms);
 
   //for movement of character
@@ -262,5 +271,28 @@ function update ()
   else if(player.body.touching.down===false && rotationL===false)
   {
     player.anims.play('jump1R',true);
+  }
+
+
+  //camera
+
+  if (rotationL)
+  {
+    cameraSmooth-=10;
+    mainCamera.scrollX = (player.x-950+cameraSmooth)|0;
+  }
+  else if (rotationL===false)
+  {
+    cameraSmooth+=10;
+    mainCamera.scrollX = (player.x-950+cameraSmooth)|0;
+  }
+  
+  if(cameraSmooth>cameraCap)
+  {
+    cameraSmooth=cameraCap;
+  }
+  else if(cameraSmooth<-cameraCap)
+  {
+    cameraSmooth=-cameraCap;
   }
 }
