@@ -29,6 +29,7 @@ var velocityCap=600;
 var rotationL=false;
 var cameraSmooth=0;
 const cameraCap=150;
+var hitRot=false;
 
 
 var game = new Phaser.Game(config);
@@ -49,7 +50,7 @@ function preload ()
 
   this.load.spritesheet('rotton',
   'images/Rotton_Knight-Sheet.png',
-  { frameWidth: 100, frameHeight: 80 });
+  { frameWidth: 92, frameHeight: 80 });
 }
 
 function create ()
@@ -93,13 +94,17 @@ function create ()
   this.anims.create({
     key: 'jump1R',
     frames: this.anims.generateFrameNumbers('lemon', { start: 1, end: 3 }),
-    frameRate: 10
+    frameRate: 5
   });
   this.anims.create({
     key: 'jump1L',
     frames: this.anims.generateFrameNumbers('lemon', { start: 14, end: 16 }),
-    frameRate: 10
+    frameRate: 5
   });
+
+
+
+  rotton = this.physics.add.sprite(300,800,'rotton');
 
   //rotton
   this.anims.create({
@@ -115,22 +120,21 @@ function create ()
   this.anims.create({
     key: 'rotWalkR',
     frames: this.anims.generateFrameNumbers('rotton', { start: 0, end: 3 }),
-    frameRate: 1
+    frameRate: 5
   });
   this.anims.create({
     key: 'rotWalkL',
     frames: this.anims.generateFrameNumbers('rotton', { start: 5, end: 8 }),
-    frameRate: 1
+    frameRate: 5
   });
   this.anims.create({
-    key: 'rotfall',
+    key: 'rotFall',
     frames: this.anims.generateFrameNumbers('rotton', { start: 10, end: 11 }),
     frameRate: 10
   });
 
 
   //create camera
-
   mainCamera=this.cameras.main.setSize(1900, 1080);
 
   mainCamera.setBounds(0,0,11900,1080,false)
@@ -138,6 +142,8 @@ function create ()
 
   //add collision
   this.physics.add.collider(player, platforms);
+  this.physics.add.collider(rotton, platforms);
+  this.physics.add.overlap(player, rotton, touchRotton, null, this);
 
   //for movement of character
   cursors = this.input.keyboard.createCursorKeys();
@@ -145,6 +151,15 @@ function create ()
 
 function update ()
 {
+  //for first run
+  if (hitRot===false)
+  {
+    //rotton knight
+    rotton.anims.play('rotWalkR',true);
+    rotton.setVelocityX(100);
+  }
+
+
   //player physics
 
   if (player.body.touching.down)
@@ -279,6 +294,7 @@ function update ()
   {
     player.anims.play('jump1R',true);
   }
+  //end of player
 
   //camera
   if (rotationL)
@@ -305,4 +321,13 @@ function update ()
   {
     cameraSmooth=-cameraCap;
   }
+
+}
+
+function touchRotton(player, rotton)
+{
+  rotton.anims.play('rotFall',true);
+  rotton.setVelocityX(0);
+  rotton.setVelocityY(-700);
+  hitRot=true;
 }
