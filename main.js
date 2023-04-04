@@ -46,6 +46,10 @@ function preload ()
   this.load.spritesheet('lemon', 
   'images/Princess_Lemon-Sheet.png',
   { frameWidth: 60, frameHeight: 96 });
+
+  this.load.spritesheet('rotton',
+  'images/Rotton_Knight-Sheet.png',
+  { frameWidth: 100, frameHeight: 80 });
 }
 
 function create ()
@@ -91,45 +95,39 @@ function create ()
     frames: this.anims.generateFrameNumbers('lemon', { start: 1, end: 3 }),
     frameRate: 10
   });
-
-  this.anims.create({
-    key: 'jump2R',
-    frames: [ { key: 'lemon', frame: 2 } ],
-    frameRate: 1
-  });
-
-  this.anims.create({
-    key: 'jump3R',
-    frames: [ { key: 'lemon', frame: 3 } ],
-    frameRate: 1
-  });
-
   this.anims.create({
     key: 'jump1L',
     frames: this.anims.generateFrameNumbers('lemon', { start: 14, end: 16 }),
     frameRate: 10
   });
 
+  //rotton
   this.anims.create({
-    key: 'jump2L',
-    frames: [ { key: 'lemon', frame: 6 } ],
+    key: 'rotTurnL',
+    frames: [ { key: 'rotton', frame: 5 } ],
     frameRate: 1
   });
-
   this.anims.create({
-    key: 'jump3L',
-    frames: [ { key: 'lemon', frame: 7 } ],
+    key: 'rotTurnR',
+    frames: [ { key: 'rotton', frame: 9 } ],
     frameRate: 1
   });
+  this.anims.create({
+    key: 'rotWalkR',
+    frames: this.anims.generateFrameNumbers('rotton', { start: 0, end: 3 }),
+    frameRate: 1
+  });
+  this.anims.create({
+    key: 'rotWalkL',
+    frames: this.anims.generateFrameNumbers('rotton', { start: 5, end: 8 }),
+    frameRate: 1
+  });
+  this.anims.create({
+    key: 'rotfall',
+    frames: this.anims.generateFrameNumbers('rotton', { start: 10, end: 11 }),
+    frameRate: 10
+  });
 
-
-  //for actual animations
-  // this.anims.create({
-  //   key: 'right',
-  //   frames: this.anims.generateFrameNumbers('lemon', { start: 5, end: 8 }),
-  //   frameRate: 10,
-  //   repeat: -1
-  // });
 
   //create camera
 
@@ -256,7 +254,6 @@ function update ()
     rotationL=false;
   }
 
-
   //animations
   if(player.body.touching.down===true && velocity[0]<-3)
   {
@@ -282,7 +279,6 @@ function update ()
   {
     player.anims.play('jump1R',true);
   }
-
 
   //camera
   if (rotationL)
