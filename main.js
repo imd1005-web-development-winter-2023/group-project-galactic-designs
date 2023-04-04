@@ -40,7 +40,7 @@ function preload ()
 
   //load images
   this.load.image('ground', 'images/platform.png');
-  this.load.image('sky', 'images/backround.jpg');
+  this.load.image('sky', 'images/background.png');
   
   //load spritesheet
   this.load.spritesheet('lemon', 
@@ -51,11 +51,11 @@ function preload ()
 function create ()
 {
   //make sky
-  this.add.image(950, 540, 'sky');
+  this.add.image(950, 540, 'sky').setScale(17);
 
   platforms = this.physics.add.staticGroup();
 
-  platforms.create(950, 700, 'ground').setScale(10).refreshBody();
+  platforms.create(950, 1000, 'ground').setScale(10).refreshBody();
 
   //player create
   player = this.physics.add.sprite(100, 350, 'lemon');
