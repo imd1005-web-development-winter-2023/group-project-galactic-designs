@@ -246,7 +246,6 @@ function update ()
     velocity[0]=-velocityCap;
   }
 
-
   //setting rotation
   if (velocity[0]<-0.1)
   {
