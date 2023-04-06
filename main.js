@@ -2,7 +2,7 @@
 //  JS File
 //  You may remove the code below - it's just boilerplate
 //
-var config = {
+let config = {
   type: Phaser.AUTO,
   width: 11900,
   height: 1080,
@@ -20,24 +20,24 @@ var config = {
   }
 };
 
-var player;
-var platforms;
-var cursors;
+let player;
+let platforms;
+let cursors;
 //velocity[0] is velocity x and velocity[1] is velocity y
-var velocity = [0,0];
-var velocityCap=600;
-var rotationL=false;
-var cameraSmooth=0;
+let velocity = [0,0];
+let velocityCap=600;
+let rotationL=false;  
+let cameraSmooth=0;
 const cameraCap=150;
-var hitRot=false;
-var attackInAir=false;
+let hitRot=false;
+let attackInAir=false;
 
 
-var game = new Phaser.Game(config);
+let game = new Phaser.Game(config);
 
 function preload ()
 {
-  //keyboard input variables
+  //keyboard input letiables
   keyD = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.D);
   keyA = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.A);
 
@@ -60,6 +60,7 @@ function preload ()
 
 function create ()
 {
+
   //make sky
   this.add.image(950, 540, 'sky').setScale(17);
 
@@ -69,12 +70,13 @@ function create ()
 
   //player create
   player = this.physics.add.sprite(100, 350, 'lemon');
-  
 
   // https://www.youtube.com/watch?v=SCO2BbbO17c made using this helpful video. it is using a typescript file but i tuned it for javascript
+  
+  
   weapon = this.add.rectangle(0,0,32,64,0xffffff,0.5);
-  this.physics.add.existing(weapon);//set ignore gravity only works here for some reason -> https://phaser.io/examples/v3/view/physics/matterjs/ignore-gravity
-
+  weapon = this.physics.add.existing(weapon,0);//set ignore gravity only works here for some reason -> https://phaser.io/examples/v3/view/physics/matterjs/ignore-gravity
+  weapon.body.allowGravity=false;
 
 
   player.setCollideWorldBounds(true);
@@ -168,7 +170,6 @@ function update ()
     rotton.anims.play('rotWalkR',true);
     rotton.setVelocityX(100);
   }
-
 
   //player physics
 
