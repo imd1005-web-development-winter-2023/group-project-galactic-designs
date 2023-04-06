@@ -75,9 +75,8 @@ function create ()
   
   
   weapon = this.add.rectangle(0,0,32,64,0xffffff,0.5);
-  weapon = this.physics.add.existing(weapon,0);//set ignore gravity only works here for some reason -> https://phaser.io/examples/v3/view/physics/matterjs/ignore-gravity
-  weapon.body.allowGravity=false;
-
+  weapon = this.physics.add.existing(weapon,0);//no gravity copied from this https://stackoverflow.com/questions/72443441/phaser-3-arcade-gravity-isnt-working-properly-no-matter-what-value-i-set-it-to
+  weapon.body.allowGravity = false;
 
   player.setCollideWorldBounds(true);
 
