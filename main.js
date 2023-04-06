@@ -30,6 +30,7 @@ var rotationL=false;
 var cameraSmooth=0;
 const cameraCap=150;
 var hitRot=false;
+var attackInAir=false;
 
 
 var game = new Phaser.Game(config);
@@ -38,10 +39,14 @@ function preload ()
 {
   //keyboard input variables
   keyD = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.D);
+  keyA = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.A);
 
   //load images
   this.load.image('ground', 'images/platform.png');
   this.load.image('sky', 'images/background.png');
+
+  //weapon hitbox test
+  this.load.image('weapon', 'images/weapon-hitbox test.png');
   
   //load spritesheet
   this.load.spritesheet('lemon', 
@@ -64,8 +69,14 @@ function create ()
 
   //player create
   player = this.physics.add.sprite(100, 350, 'lemon');
-
   
+
+  // https://www.youtube.com/watch?v=SCO2BbbO17c made using this helpful video. it is using a typescript file but i tuned it for javascript
+  weapon = this.add.rectangle(0,0,32,64,0xffffff,0.5);
+  this.physics.add.existing(weapon);//set ignore gravity only works here for some reason -> https://phaser.io/examples/v3/view/physics/matterjs/ignore-gravity
+
+
+
   player.setCollideWorldBounds(true);
 
   this.anims.create({
@@ -102,9 +113,8 @@ function create ()
     frameRate: 5
   });
 
-
-
   rotton = this.physics.add.sprite(300,800,'rotton');
+
 
   //rotton
   this.anims.create({
@@ -143,7 +153,7 @@ function create ()
   //add collision
   this.physics.add.collider(player, platforms);
   this.physics.add.collider(rotton, platforms);
-  this.physics.add.overlap(player, rotton, touchRotton, null, this);
+  this.physics.add.overlap(weapon, rotton, touchRotton, null, this);
 
   //for movement of character
   cursors = this.input.keyboard.createCursorKeys();
@@ -166,9 +176,17 @@ function update ()
   {
     velocityCap=600;
     velocity[1]=0;
+    attackInAir=false;
   }
 
-  if (cursors.left.isDown && cursors.right.isDown && player.body.touching.down)
+  if (attackInAir===false&&keyA.isDown)
+  {
+    velocity[1]-=100;
+    player.setVelocityY(-500);
+    weapon.enableBody(true,player.x+50,player.y,true,false);
+    attackInAir=true;
+  }
+  else if (cursors.left.isDown && cursors.right.isDown && player.body.touching.down)
   {
     velocity[0]*=.7;
     player.setVelocityX(velocity[0]);
@@ -322,6 +340,14 @@ function update ()
     cameraSmooth=-cameraCap;
   }
 
+
+
+  //disable weapon hitbox
+
+  if (attackInAir===true)
+  {
+    weapon.disableBody(true,true);
+  }
 }
 
 function touchRotton(player, rotton)
