@@ -31,6 +31,7 @@ let cameraSmooth=0;
 const cameraCap=150;
 let hitRot=false;
 let attackInAir=false;
+let loopTimes=0;
 
 
 let game = new Phaser.Game(config);
@@ -77,6 +78,8 @@ function create ()
   weapon = this.add.rectangle(0,0,32,64,0xffffff,0.5);
   weapon = this.physics.add.existing(weapon,0);//no gravity copied from this https://stackoverflow.com/questions/72443441/phaser-3-arcade-gravity-isnt-working-properly-no-matter-what-value-i-set-it-to
   weapon.body.allowGravity = false;
+  this.physics.world.remove(weapon.body);
+
 
   player.setCollideWorldBounds(true);
 
@@ -162,7 +165,15 @@ function create ()
 
 function update ()
 {
-  //for first run
+  if(loopTimes>=1)
+  {
+    console.log(loopTimes)
+    loopTimes++;
+  }
+  //disable weapon hitbox
+  
+
+
   if (hitRot===false)
   {
     //rotton knight
@@ -179,12 +190,16 @@ function update ()
     attackInAir=false;
   }
 
-  if (attackInAir===false&&keyA.isDown)
+  if (attackInAir===false&&keyA.isDown&&rotationL===true)
   {
     velocity[1]-=100;
     player.setVelocityY(-500);
-    weapon.enableBody(true,player.x+50,player.y,true,false);
+    weapon.x = player.x+50;
+    weapon.y = player.y;
+    this.physics.world.add(weapon.body);//again following the video for creatin a hitbox but weapon.body cannot have a this. in front of it for some reason
+    weapon.body.enable=true;
     attackInAir=true;
+    loopTimes=1;
   }
   else if (cursors.left.isDown && cursors.right.isDown && player.body.touching.down)
   {
@@ -341,13 +356,14 @@ function update ()
   }
 
 
-
-  //disable weapon hitbox
-
-  if (attackInAir===true)
+  if (loopTimes==5)
   {
-    weapon.disableBody(true,true);
+    console.log("hitbox disable");
+    weapon.body.enable=false;
+    this.physics.world.remove(weapon.body);
+    loopTimes=0;
   }
+
 }
 
 function touchRotton(player, rotton)
