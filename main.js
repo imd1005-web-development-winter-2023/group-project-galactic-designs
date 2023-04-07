@@ -68,6 +68,8 @@ function create ()
   //make sky
   this.add.image(950, 540, 'sky').setScale(17);
 
+  background = this.physics.add.group();
+
   this.add.image(1200, backgroundplacement, 'melon').setScale(.8);
   this.add.image(3000, backgroundplacement, 'melon');
   this.add.image(51, backgroundplacement, 'melon');
