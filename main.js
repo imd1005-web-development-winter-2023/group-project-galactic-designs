@@ -32,6 +32,7 @@ const cameraCap=150;
 let hitRot=false;
 let attackInAir=false;
 let loopTimes=0;
+const backgroundplacement=600;
 
 
 let game = new Phaser.Game(config);
@@ -45,6 +46,8 @@ function preload ()
   //load images
   this.load.image('ground', 'images/platform.png');
   this.load.image('sky', 'images/background.png');
+  this.load.image('bana', 'images/Banana.png');
+  this.load.image('melon', 'images/Watermelon.png');
 
   //weapon hitbox test
   this.load.image('weapon', 'images/weapon-hitbox test.png');
@@ -64,6 +67,13 @@ function create ()
 
   //make sky
   this.add.image(950, 540, 'sky').setScale(17);
+
+  this.add.image(1200, backgroundplacement, 'melon').setScale(.8);
+  this.add.image(3000, backgroundplacement, 'melon');
+  this.add.image(51, backgroundplacement, 'melon');
+  this.add.image(1003, backgroundplacement, 'bana');
+  this.add.image(2300, backgroundplacement, 'bana');
+  this.add.image(3500, backgroundplacement, 'bana');
 
   platforms = this.physics.add.staticGroup();
 
