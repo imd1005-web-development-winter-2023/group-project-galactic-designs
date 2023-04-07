@@ -75,7 +75,7 @@ function create ()
   // https://www.youtube.com/watch?v=SCO2BbbO17c made using this helpful video. it is using a typescript file but i tuned it for javascript
   
   
-  weapon = this.add.rectangle(0,0,32,64,0xffffff,0.5);
+  weapon = this.add.rectangle(0,0,45,64,0xffffff,0);//0.5 for the last var to see the box
   weapon = this.physics.add.existing(weapon,0);//no gravity copied from this https://stackoverflow.com/questions/72443441/phaser-3-arcade-gravity-isnt-working-properly-no-matter-what-value-i-set-it-to
   weapon.body.allowGravity = false;
   this.physics.world.remove(weapon.body);
@@ -167,12 +167,8 @@ function update ()
 {
   if(loopTimes>=1)
   {
-    console.log(loopTimes)
     loopTimes++;
   }
-  //disable weapon hitbox
-  
-
 
   if (hitRot===false)
   {
@@ -182,7 +178,6 @@ function update ()
   }
 
   //player physics
-
   if (player.body.touching.down)
   {
     velocityCap=600;
@@ -190,12 +185,21 @@ function update ()
     attackInAir=false;
   }
 
-  if (attackInAir===false&&keyA.isDown&&rotationL===true)
+
+   if (attackInAir===false&&keyA.isDown)
   {
     velocity[1]-=100;
     player.setVelocityY(-500);
-    weapon.x = player.x+50;
-    weapon.y = player.y;
+    if(rotationL===true && cursors.right.isDown===false || cursors.left.isDown)
+    {
+      weapon.x = player.x-50;
+      weapon.y = player.y;
+    }  
+    else if(rotationL===false || cursors.right.isDown===true)
+    {
+      weapon.x = player.x+50;
+      weapon.y = player.y;
+    }
     this.physics.world.add(weapon.body);//again following the video for creatin a hitbox but weapon.body cannot have a this. in front of it for some reason
     weapon.body.enable=true;
     attackInAir=true;
@@ -355,15 +359,13 @@ function update ()
     cameraSmooth=-cameraCap;
   }
 
-
+  //disable weapon hitbox
   if (loopTimes==5)
   {
-    console.log("hitbox disable");
     weapon.body.enable=false;
     this.physics.world.remove(weapon.body);
     loopTimes=0;
   }
-
 }
 
 function touchRotton(player, rotton)
