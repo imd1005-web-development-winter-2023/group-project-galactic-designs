@@ -439,7 +439,7 @@ function update ()
   }
 
   //disable weapon hitbox
-  if (loopTimes==5)
+  if (loopTimes==10) // change for sword hitbox time
   {
     weapon.body.enable=false;
     this.physics.world.remove(weapon.body);
