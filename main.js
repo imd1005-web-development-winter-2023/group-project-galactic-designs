@@ -448,7 +448,7 @@ function touchRotton(player, rotton)
 
 function hitEnemy(player, tomato)// it turns out the player in (player, tomato) is required even though it is not used
 {
-  tomato.setActive(false).setVisible(false);
+  tomato.destroy();
 }
 
 function touchEnemy(player,tomato)
