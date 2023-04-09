@@ -214,8 +214,9 @@ function create ()
   this.physics.add.collider(player, platforms);
   this.physics.add.collider(rotton, platforms);
   this.physics.add.collider(tomato, platforms);
+  this.physics.add.overlap(player, tomato, touchEnemy, null, this);
   this.physics.add.overlap(weapon, rotton, touchRotton, null, this);
-  this.physics.add.overlap(weapon, tomato, touchEnemy, null, this);
+  this.physics.add.overlap(weapon, tomato, hitEnemy, null, this);
 
   //for movement of character
   cursors = this.input.keyboard.createCursorKeys();
@@ -445,7 +446,13 @@ function touchRotton(player, rotton)
   hitRot=true;
 }
 
-function touchEnemy(player, tomato)// it turns out the player in (player, tomato) is required even though it is not used
+function hitEnemy(player, tomato)// it turns out the player in (player, tomato) is required even though it is not used
 {
   tomato.setActive(false).setVisible(false);
+}
+
+function touchEnemy(player,tomato)
+{
+  
+  player.setActive(false).destroy();
 }
