@@ -44,7 +44,13 @@ function preload ()
   this.load.image('sky', 'images/background.png');
   this.load.image('bana', 'images/Banana.png');
   this.load.image('melon', 'images/Watermelon.png');
-  
+  this.load.image('clouds', 'Background_Layers/clouds_front.png');
+  this.load.image('cloudsback', 'Background_Layers/clouds_behind.png');
+  this.load.image('ground', 'Background_Layers/ground.png');
+  this.load.image('trees1', 'Background_Layers/trees_front.png');
+  this.load.image('trees2', 'Background_Layers/trees_second_layer.png');
+  this.load.image('trees3', 'Background_Layers/trees_third_layer.png');
+  this.load.image('mountain', 'Background_Layers/mountains.png');
 
   //weapon hitbox test
   this.load.image('weapon', 'images/weapon-hitbox test.png');
@@ -67,16 +73,24 @@ function create ()
 {
 
   //make sky
-  this.add.image(950, 540, 'sky').setScale(17);
+  // this.add.image(950, 540, 'sky').setScale(17);
 
   // background=this.physics.add.group();
   
+  this.add.rectangle(950,540,1900,1080,0x87CEEB,1).setScrollFactor(0);
+  this.add.image(1500, backgroundplacement, 'mountain').setScrollFactor(.1);
+  this.add.image(1500, backgroundplacement, 'clouds').setScrollFactor(.15);
+
   this.add.image(1200, backgroundplacement, 'melon').setScale(.8).setScrollFactor(.5);
   this.add.image(3000, backgroundplacement, 'melon').setScrollFactor(.5);
   this.add.image(51, backgroundplacement, 'melon').setScrollFactor(.5);
   this.add.image(1003, backgroundplacement, 'bana').setScrollFactor(.5);
   this.add.image(2300, backgroundplacement, 'bana').setScrollFactor(.5);
   this.add.image(3500, backgroundplacement, 'bana').setScrollFactor(.5);
+
+
+  this.add.image(1500, backgroundplacement, 'trees1').setScrollFactor(.9);
+
 
   // background.children.allowGravity = false;
 
