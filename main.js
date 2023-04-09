@@ -22,7 +22,8 @@ let cursors;
 //velocity[0] is velocity x and velocity[1] is velocity y
 let velocity = [0,0];
 let velocityCap=600;
-let rotationL=false;  
+let rotationL=false;
+let weaponSwingL=false;
 let cameraSmooth=0;
 const cameraCap=150;
 let hitRot=false;
@@ -119,19 +120,16 @@ function create ()
     frames: this.anims.generateFrameNumbers('lemon', { start: 9, end: 12 }),
     frameRate: 10,
   });
-
   this.anims.create({
     key: 'turnR',
     frames: [ { key: 'lemon', frame: 0 } ],
     frameRate: 1
   });
-
   this.anims.create({
     key: 'turnL',
     frames: [ { key: 'lemon', frame: 8 } ],
     frameRate: 1
   });
-
   this.anims.create({
     key: 'right',
     frames: this.anims.generateFrameNumbers('lemon', { start: 4, end: 7 }),
@@ -158,10 +156,9 @@ function create ()
     frameRate: 5
   });
 
+  //rotton
   rotton = this.physics.add.sprite(300,800,'rotton');
 
-
-  //rotton
   this.anims.create({
     key: 'rotTurnL',
     frames: [ { key: 'rotton', frame: 5 } ],
@@ -207,9 +204,7 @@ function create ()
 
   //create camera
   mainCamera=this.cameras.main.setSize(1900, 1080);
-
   mainCamera.setBounds(0,0,11900,1080,false)
-
 
   //add collision
   this.physics.add.collider(player, platforms);
@@ -230,6 +225,16 @@ function update ()
 
   if(loopTimes>=1)
   {
+    if(weaponSwingL === true)
+    {
+      weapon.x = player.x-50;
+      weapon.y = player.y;
+    }  
+    else if(weaponSwingL ===false)
+    {
+      weapon.x = player.x+50;
+      weapon.y = player.y;
+    }
     loopTimes++;
   }
 
@@ -253,7 +258,6 @@ function update ()
     attackInAir=false;
   }
 
-
    if (attackInAir===false&&keyA.isDown)
   {
     velocity[1]-=100;
@@ -262,11 +266,13 @@ function update ()
     {
       weapon.x = player.x-50;
       weapon.y = player.y;
+      weaponSwingL = true;
     }  
     else if(rotationL===false || cursors.right.isDown===true)
     {
       weapon.x = player.x+50;
       weapon.y = player.y;
+      weaponSwingL = false;
     }
     this.physics.world.add(weapon.body);//again following the video for creatin a hitbox but weapon.body cannot have a this. in front of it for some reason
     weapon.body.enable=true;
@@ -377,11 +383,11 @@ function update ()
   //animations
   if (loopTimes>0)
   {
-    if(rotationL===true && cursors.right.isDown===false || cursors.left.isDown)
+    if(weaponSwingL === true)
     {
       player.anims.play('swingLeft',true);
     }  
-    else if(rotationL===false || cursors.right.isDown===true)
+    else if(weaponSwingL === false)
     {
       player.anims.play('swingRight',true);
     }
@@ -439,7 +445,7 @@ function update ()
   }
 
   //disable weapon hitbox
-  if (loopTimes==10) // change for sword hitbox time
+  if (loopTimes==6) // change for sword hitbox time
   {
     weapon.body.enable=false;
     this.physics.world.remove(weapon.body);
@@ -455,7 +461,8 @@ function touchRotton(player, rotton)
   hitRot=true;
 }
 
-function hitEnemy(player, tomato)// it turns out the player in (player, tomato) is required even though it is not used
+function hitEnemy(player, tomato)
+// it turns out the player in (player, tomato) is required even though it is not used
 {
   hitTo=true;
   tomato.destroy();
@@ -463,5 +470,6 @@ function hitEnemy(player, tomato)// it turns out the player in (player, tomato) 
 
 function touchEnemy(player,tomato)
 {
-  this.scene.pause();//perminantly pauses game
+  //perminantly pauses game
+  this.scene.pause();
 }
