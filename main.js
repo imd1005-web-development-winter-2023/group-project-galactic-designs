@@ -26,6 +26,7 @@ let rotationL=false;
 let cameraSmooth=0;
 const cameraCap=150;
 let hitRot=false;
+let hitTo=false;
 let attackInAir=false;
 let loopTimes=0;
 const backgroundplacement=600;
@@ -66,7 +67,7 @@ function preload ()
 
   this.load.spritesheet('tomato',
    'images/Tomato.png',
-   {frameWidth: 60, frameHeight: 60});
+   {frameWidth: 65, frameHeight: 64});
 }
 
 function create ()
@@ -100,12 +101,12 @@ function create ()
 
   //player create
   player = this.physics.add.sprite(100, 350, 'lemon');
-  player.setSize(50,96);
+  player.setSize(50,96); // this bassically makes the player hitbox smaller then the actual sprite size
 
   // https://www.youtube.com/watch?v=SCO2BbbO17c made using this helpful video. it is using a typescript file but i tuned it for javascript
   
   
-  weapon = this.add.rectangle(0,0,45,64,0xffffff,0);//0.5 for the last var to see the box
+  weapon = this.add.rectangle(0,0,50,64,0xffffff,0);//0.5 for the last var to see the box
   weapon = this.physics.add.existing(weapon,0);//no gravity copied from this https://stackoverflow.com/questions/72443441/phaser-3-arcade-gravity-isnt-working-properly-no-matter-what-value-i-set-it-to
   weapon.body.allowGravity = false;
   this.physics.world.remove(weapon.body);
@@ -187,6 +188,7 @@ function create ()
     frameRate: 10
   });
 
+  // tomato
   tomato = this.physics.add.sprite(500,800,'tomato');
 
   this.anims.create({
@@ -200,8 +202,7 @@ function create ()
     frameRate: 5
   });
 
-  tomato.anims.play('tomaWalkR',true);
-  tomato.setVelocityX(100);
+  tomato.setVelocityX(100).setSize(50,60);
 
 
   //create camera
@@ -224,6 +225,9 @@ function create ()
 
 function update ()
 {
+
+  //calculations
+
   if(loopTimes>=1)
   {
     loopTimes++;
@@ -234,6 +238,11 @@ function update ()
     //rotton knight
     rotton.anims.play('rotWalkR',true);
     rotton.setVelocityX(100);
+  }
+
+  if (hitTo===false)
+  {
+    tomato.anims.play('tomaWalkR',true);
   }
 
   //player physics
@@ -448,10 +457,11 @@ function touchRotton(player, rotton)
 
 function hitEnemy(player, tomato)// it turns out the player in (player, tomato) is required even though it is not used
 {
+  hitTo=true;
   tomato.destroy();
 }
 
 function touchEnemy(player,tomato)
 {
-  player.setActive(false).destroy();
+  this.scene.pause();//perminantly pauses game
 }
