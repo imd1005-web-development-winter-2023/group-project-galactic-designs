@@ -58,7 +58,7 @@ function preload ()
   //load spritesheet
   this.load.spritesheet('lemon', 
   'images/Princess_Lemon-Sheet.png',
-  { frameWidth: 60, frameHeight: 96 });
+  { frameWidth: 104, frameHeight: 96 });
 
   this.load.spritesheet('rotton',
   'images/Rotton_Knight-Sheet.png',
@@ -100,6 +100,7 @@ function create ()
 
   //player create
   player = this.physics.add.sprite(100, 350, 'lemon');
+  player.setSize(50,96);
 
   // https://www.youtube.com/watch?v=SCO2BbbO17c made using this helpful video. it is using a typescript file but i tuned it for javascript
   
@@ -145,6 +146,16 @@ function create ()
     frames: this.anims.generateFrameNumbers('lemon', { start: 14, end: 16 }),
     frameRate: 5
   });
+  this.anims.create({
+    key: 'swingRight',
+    frames: this.anims.generateFrameNumbers('lemon', { start: 17, end: 18 }),
+    frameRate: 5
+  });
+  this.anims.create({
+    key: 'swingLeft',
+    frames: this.anims.generateFrameNumbers('lemon', { start: 19, end: 20 }),
+    frameRate: 5
+  });
 
   rotton = this.physics.add.sprite(300,800,'rotton');
 
@@ -175,7 +186,6 @@ function create ()
     frames: this.anims.generateFrameNumbers('rotton', { start: 10, end: 11 }),
     frameRate: 10
   });
-
 
   tomato = this.physics.add.sprite(500,800,'tomato');
 
@@ -355,7 +365,18 @@ function update ()
   }
 
   //animations
-  if(player.body.touching.down===true && velocity[0]<-3)
+  if (loopTimes>0)
+  {
+    if(rotationL===true && cursors.right.isDown===false || cursors.left.isDown)
+    {
+      player.anims.play('swingLeft',true);
+    }  
+    else if(rotationL===false || cursors.right.isDown===true)
+    {
+      player.anims.play('swingRight',true);
+    }
+  }
+  else if(player.body.touching.down===true && velocity[0]<-3)
   {
     player.anims.play('left',true);
   }
