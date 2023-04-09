@@ -453,6 +453,5 @@ function hitEnemy(player, tomato)// it turns out the player in (player, tomato) 
 
 function touchEnemy(player,tomato)
 {
-  
   player.setActive(false).destroy();
 }
