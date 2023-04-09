@@ -220,24 +220,6 @@ function create ()
 
 function update ()
 {
-
-  //calculations
-
-  if(loopTimes>=1)
-  {
-    if(weaponSwingL === true)
-    {
-      weapon.x = player.x-50;
-      weapon.y = player.y;
-    }  
-    else if(weaponSwingL ===false)
-    {
-      weapon.x = player.x+50;
-      weapon.y = player.y;
-    }
-    loopTimes++;
-  }
-
   if (hitRot===false)
   {
     //rotton knight
@@ -264,14 +246,10 @@ function update ()
     player.setVelocityY(-500);
     if(rotationL===true && cursors.right.isDown===false || cursors.left.isDown)
     {
-      weapon.x = player.x-50;
-      weapon.y = player.y;
       weaponSwingL = true;
     }  
     else if(rotationL===false || cursors.right.isDown===true)
     {
-      weapon.x = player.x+50;
-      weapon.y = player.y;
       weaponSwingL = false;
     }
     this.physics.world.add(weapon.body);//again following the video for creatin a hitbox but weapon.body cannot have a this. in front of it for some reason
@@ -380,6 +358,21 @@ function update ()
     rotationL=false;
   }
 
+  //weapon swing
+  if(loopTimes>=1)
+  {
+    if(weaponSwingL === true)
+    {
+      weapon.x = player.x-50;
+      weapon.y = player.y-10;
+    }  
+    else if(weaponSwingL ===false)
+    {
+      weapon.x = player.x+50;
+      weapon.y = player.y-10;
+    }
+    loopTimes++;
+  }
   //animations
   if (loopTimes>0)
   {
