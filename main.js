@@ -44,6 +44,7 @@ function preload ()
   this.load.image('sky', 'images/background.png');
   this.load.image('bana', 'images/Banana.png');
   this.load.image('melon', 'images/Watermelon.png');
+  
 
   //weapon hitbox test
   this.load.image('weapon', 'images/weapon-hitbox test.png');
@@ -56,6 +57,10 @@ function preload ()
   this.load.spritesheet('rotton',
   'images/Rotton_Knight-Sheet.png',
   { frameWidth: 92, frameHeight: 80 });
+
+  this.load.spritesheet('tomato',
+   'images/Tomato.png',
+   {frameWidth: 60, frameHeight: 60});
 }
 
 function create ()
@@ -158,6 +163,23 @@ function create ()
   });
 
 
+  tomato = this.physics.add.sprite(500,800,'tomato');
+
+  this.anims.create({
+    key: 'tomaWalkR',
+    frames: this.anims.generateFrameNumbers('tomato', { start: 0, end: 1 }),
+    frameRate: 5
+  });
+  this.anims.create({
+    key: 'tomaWalkL',
+    frames: this.anims.generateFrameNumbers('tomato', { start: 2, end: 3 }),
+    frameRate: 5
+  });
+
+  tomato.anims.play('tomaWalkR',true);
+  tomato.setVelocityX(100);
+
+
   //create camera
   mainCamera=this.cameras.main.setSize(1900, 1080);
 
@@ -167,7 +189,9 @@ function create ()
   //add collision
   this.physics.add.collider(player, platforms);
   this.physics.add.collider(rotton, platforms);
+  this.physics.add.collider(tomato, platforms);
   this.physics.add.overlap(weapon, rotton, touchRotton, null, this);
+  this.physics.add.overlap(weapon, tomato, touchEnemy, null, this);
 
   //for movement of character
   cursors = this.input.keyboard.createCursorKeys();
@@ -384,4 +408,10 @@ function touchRotton(player, rotton)
   rotton.setVelocityX(0);
   rotton.setVelocityY(-700);
   hitRot=true;
+}
+
+function touchEnemy(tomato)
+{
+  console.log("touch enemy works");
+  tomato.setActive(false).setVisible(false);
 }
