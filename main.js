@@ -53,6 +53,7 @@ function preload ()
   this.load.image('trees2', 'Background_Layers/trees_second_layer.png');
   this.load.image('trees3', 'Background_Layers/trees_third_layer.png');
   this.load.image('mountain', 'Background_Layers/mountains.png');
+  this.load.image('lime', 'images/Lime_Large.png');
 
   //weapon hitbox test
   this.load.image('weapon', 'images/weapon-hitbox test.png');
@@ -201,6 +202,11 @@ function create ()
 
   tomato.setVelocityX(100).setSize(50,60);
 
+  lime = this.physics.add.image(1600,900,'lime');
+  lime = this.physics.add.existing(lime,0);
+  lime.body.allowGravity = false;
+  lime.setSize(50,80);
+
 
   //create camera
   mainCamera=this.cameras.main.setSize(1900, 1080);
@@ -213,6 +219,7 @@ function create ()
   this.physics.add.overlap(player, tomato, touchEnemy, null, this);
   this.physics.add.overlap(weapon, rotton, touchRotton, null, this);
   this.physics.add.overlap(weapon, tomato, hitEnemy, null, this);
+  this.physics.add.overlap(player, lime, gameEnd, null, this);
 
   //for movement of character
   cursors = this.input.keyboard.createCursorKeys();
@@ -225,6 +232,9 @@ function update ()
     //rotton knight
     rotton.anims.play('rotWalkR',true);
     rotton.setVelocityX(100);
+  }else if (rotton.body.touching.down)
+  {
+    rotton.setVelocityX(0);
   }
 
   if (hitTo===false)
@@ -438,7 +448,7 @@ function update ()
   }
 
   //disable weapon hitbox
-  if (loopTimes==6) // change for sword hitbox time
+  if (loopTimes==10) // change for sword hitbox time
   {
     weapon.body.enable=false;
     this.physics.world.remove(weapon.body);
@@ -449,7 +459,13 @@ function update ()
 function touchRotton(player, rotton)
 {
   rotton.anims.play('rotFall',true);
-  rotton.setVelocityX(0);
+  if(weaponSwingL===true)
+  {
+    rotton.setVelocityX(-100);
+  } else
+  {
+    rotton.setVelocityX(+100);
+  }
   rotton.setVelocityY(-700);
   hitRot=true;
 }
@@ -461,8 +477,16 @@ function hitEnemy(player, tomato)
   tomato.destroy();
 }
 
-function touchEnemy(player,tomato)
+function touchEnemy(player, tomato)
 {
   //perminantly pauses game
+  this.scene.pause();
+}
+
+function gameEnd(player, lime)
+{
+  player.destroy();
+  lime.destroy();
+  // TODO add hi five sprite
   this.scene.pause();
 }
