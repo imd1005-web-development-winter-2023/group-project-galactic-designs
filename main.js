@@ -364,12 +364,12 @@ function update ()
     if(weaponSwingL === true)
     {
       weapon.x = player.x-50;
-      weapon.y = player.y-10;
+      weapon.y = player.y+10;
     }  
     else if(weaponSwingL ===false)
     {
       weapon.x = player.x+50;
-      weapon.y = player.y-10;
+      weapon.y = player.y+10;
     }
     loopTimes++;
   }
