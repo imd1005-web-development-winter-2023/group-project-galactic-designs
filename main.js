@@ -28,6 +28,7 @@ let cameraSmooth=0;
 const cameraCap=150;
 let hitRot=false;
 let hitTo=false;
+let hitDuri=false;
 let attackInAir=false;
 let loopTimes=0;
 const backgroundplacement=600;
@@ -55,6 +56,7 @@ function preload ()
   this.load.image('mountain', 'Background_Layers/mountains.png');
   this.load.image('lime', 'images/Lime_Large.png');
 
+
   //weapon hitbox test
   this.load.image('weapon', 'images/weapon-hitbox test.png');
   
@@ -68,8 +70,12 @@ function preload ()
   { frameWidth: 92, frameHeight: 80 });
 
   this.load.spritesheet('tomato',
-   'images/Tomato.png',
-   {frameWidth: 65, frameHeight: 64});
+  'images/Tomato.png',
+  {frameWidth: 65, frameHeight: 64});
+   
+  this.load.spritesheet('durian',
+  'images/Durian_SpriteSheet.png',
+  {frameWidth: 135, frameHeight: 120});
 }
 
 function create ()
@@ -108,8 +114,8 @@ function create ()
   // https://www.youtube.com/watch?v=SCO2BbbO17c made using this helpful video. it is using a typescript file but i tuned it for javascript
   
   
-  weapon = this.add.rectangle(0,0,50,64,0xffffff,0);//0.5 for the last var to see the box
-  weapon = this.physics.add.existing(weapon,0);//no gravity copied from this https://stackoverflow.com/questions/72443441/phaser-3-arcade-gravity-isnt-working-properly-no-matter-what-value-i-set-it-to
+  weapon = this.add.rectangle(0,0,50,64,0xffffff,0); //0.5 for the last var to see the box
+  weapon = this.physics.add.existing(weapon,0); // no gravity copied from this https://stackoverflow.com/questions/72443441/phaser-3-arcade-gravity-isnt-working-properly-no-matter-what-value-i-set-it-to
   weapon.body.allowGravity = false;
   this.physics.world.remove(weapon.body);
 
@@ -157,7 +163,7 @@ function create ()
     frameRate: 5
   });
 
-  //rotton
+  // rotton
   rotton = this.physics.add.sprite(300,800,'rotton');
 
   this.anims.create({
@@ -200,7 +206,18 @@ function create ()
     frameRate: 5
   });
 
-  tomato.setVelocityX(100).setSize(50,60);
+  tomato.setVelocityX(100);
+
+  // durian
+  durian = this.physics.add.sprite(700,800,'durian');
+
+  this.anims.create({
+    key: 'duriWalkR',
+    frames: this.anims.generateFrameNumbers('durian', { start: 0, end: 3 }),
+    frameRate: 2
+  });
+
+  durian.setVelocityX(50).setSize(100,120);
 
   lime = this.physics.add.image(1600,900,'lime');
   lime = this.physics.add.existing(lime,0);
@@ -208,20 +225,25 @@ function create ()
   lime.setSize(50,80);
 
 
-  //create camera
+  // create camera
   mainCamera=this.cameras.main.setSize(1900, 1080);
-  mainCamera.setBounds(0,0,11900,1080,false)
+  mainCamera.setBounds(0,0,11900,1080,false);
 
-  //add collision
+  // add collision
   this.physics.add.collider(player, platforms);
   this.physics.add.collider(rotton, platforms);
   this.physics.add.collider(tomato, platforms);
+  this.physics.add.collider(durian,platforms);
   this.physics.add.overlap(player, tomato, touchEnemy, null, this);
+  this.physics.add.overlap(player, durian, touchEnemy, null, this);
   this.physics.add.overlap(weapon, rotton, touchRotton, null, this);
   this.physics.add.overlap(weapon, tomato, hitEnemy, null, this);
+  this.physics.add.overlap(weapon, durian, hitEnemy, null, this);
   this.physics.add.overlap(player, lime, gameEnd, null, this);
 
-  //for movement of character
+  player.body.onWorldBounds
+
+  // for movement of character
   cursors = this.input.keyboard.createCursorKeys();
 }
 
@@ -229,7 +251,7 @@ function update ()
 {
   if (hitRot===false)
   {
-    //rotton knight
+    // rotton knight
     rotton.anims.play('rotWalkR',true);
     rotton.setVelocityX(100);
   }else if (rotton.body.touching.down)
@@ -242,7 +264,12 @@ function update ()
     tomato.anims.play('tomaWalkR',true);
   }
 
-  //player physics
+  if (hitDuri===false)
+  {
+    durian.anims.play('duriWalkR',true);
+  }
+
+  // player physics
   if (player.body.touching.down)
   {
     velocityCap=600;
@@ -250,7 +277,7 @@ function update ()
     attackInAir=false;
   }
 
-   if (attackInAir===false&&keyA.isDown)
+  if (attackInAir===false&&keyA.isDown)
   {
     velocity[1]-=100;
     player.setVelocityY(-500);
@@ -262,7 +289,7 @@ function update ()
     {
       weaponSwingL = false;
     }
-    this.physics.world.add(weapon.body);//again following the video for creatin a hitbox but weapon.body cannot have a this. in front of it for some reason
+    this.physics.world.add(weapon.body); // again following the video for creatin a hitbox but weapon.body cannot have a this. in front of it for some reason
     weapon.body.enable=true;
     attackInAir=true;
     loopTimes=1;
@@ -301,7 +328,7 @@ function update ()
   {
     velocity[0]*=.95;
     player.setVelocityX(velocity[0]);
-  } 
+  }
   else
   {
     velocity[0]*=.7;
@@ -348,7 +375,7 @@ function update ()
     player.setVelocityX(velocity[0]);
   }
 
-  //velocity capps
+  // velocity capps
   if (velocity[0]>velocityCap) 
   {
     velocity[0]=velocityCap;
@@ -358,7 +385,7 @@ function update ()
     velocity[0]=-velocityCap;
   }
 
-  //setting rotation
+  // setting rotation
   if (velocity[0]<-0.1)
   {
     rotationL=true;
@@ -368,7 +395,7 @@ function update ()
     rotationL=false;
   }
 
-  //weapon swing
+  // weapon swing
   if(loopTimes>=1)
   {
     if(weaponSwingL === true)
@@ -383,7 +410,7 @@ function update ()
     }
     loopTimes++;
   }
-  //animations
+  // animations
   if (loopTimes>0)
   {
     if(weaponSwingL === true)
@@ -419,9 +446,9 @@ function update ()
   {
     player.anims.play('jump1R',true);
   }
-  //end of player
+  // end of player
 
-  //camera
+  // camera
   if (rotationL)
   {
     cameraSmooth-=10;
@@ -447,7 +474,7 @@ function update ()
     cameraSmooth=-cameraCap;
   }
 
-  //disable weapon hitbox
+  // disable weapon hitbox
   if (loopTimes==10) // change for sword hitbox time
   {
     weapon.body.enable=false;
@@ -461,20 +488,26 @@ function touchRotton(player, rotton)
   rotton.anims.play('rotFall',true);
   if(weaponSwingL===true)
   {
-    rotton.setVelocityX(-100);
+    rotton.setVelocityX(-200);
   } else
   {
-    rotton.setVelocityX(+100);
+    rotton.setVelocityX(+200);
   }
   rotton.setVelocityY(-700);
   hitRot=true;
 }
 
-function hitEnemy(player, tomato)
+function hitEnemy(player, enemy)
 // it turns out the player in (player, tomato) is required even though it is not used
 {
-  hitTo=true;
-  tomato.destroy();
+  if (enemy.width>65)
+  {
+    hitDuri=true;
+  } else
+  {
+    hitTo=true;
+  }
+  enemy.destroy();
 }
 
 function touchEnemy(player, tomato)
