@@ -1,13 +1,16 @@
 let config = {
   type: Phaser.AUTO,
-  width: 15360,
+  width: 14200,
   height: 1080,
   physics: {
       default: 'arcade',
       arcade: {
-          gravity: { y: 2000 },
+          gravity: { y: 1500 },
           debug: false
-      }
+      },
+      tileBias: 64,
+      fixedStep: true,
+      fps: 60,
   },
   scene: {
       preload: preload,
@@ -57,6 +60,7 @@ function preload ()
   this.load.image('trees3', 'Background_Layers/trees_third_layer.png');
   this.load.image('mountain', 'Background_Layers/mountains.png');
   this.load.image('lime', 'images/Lime_Large.png');
+  this.load.image('gameEnd', 'images/Celebrating!.png');
 
   //load tile
   this.load.image('tiles', 'images/tiles.png');
@@ -202,6 +206,8 @@ function create ()
     frameRate: 10
   });
 
+  player.body.setMaxVelocityY(1000);
+
   // tomato
   tomato = this.physics.add.sprite(500,800,'tomato');
 
@@ -229,15 +235,20 @@ function create ()
 
   durian.setVelocityX(50).setSize(100,120);
 
-  lime = this.physics.add.image(1600,900,'lime');
+  lime = this.physics.add.image(14000,930,'lime');
   lime = this.physics.add.existing(lime,0);
   lime.body.allowGravity = false;
   lime.setSize(50,80);
+  
+  princesses = this.physics.add.image(14000,900,'gameEnd');
+  princesses = this.physics.add.existing(princesses,0);
+  princesses.body.allowGravity = false;
+  princesses.setVisible(false);
 
 
   // create camera
   mainCamera=this.cameras.main.setSize(1920, 1080);
-  mainCamera.setBounds(0,0,11920,1080,false);
+  mainCamera.setBounds(0,0,14200,1080,false);
 
   // add collision
   this.physics.add.collider(rotton, platforms);
@@ -260,7 +271,7 @@ function update ()
   //prevents clipping it is extremely spagetti but i dont care at this point
   if (player.x===playerXLastFrame)
   {
-    if (playerXLastFrameTimer==2)
+    if (playerXLastFrameTimer==1)
     {
       playerXLastFrameTimer=0;
     } else {
@@ -268,7 +279,7 @@ function update ()
       playerXLastFrameTimer++;
       velocity[0]=0;
       velocity[1]=0;
-      player.setVelocityX(velocity[0]);
+      player.body.setVelocityX(velocity[0]);
     }
   }
   else 
@@ -312,7 +323,7 @@ function update ()
   if (attackInAir===false&&keyA.isDown)
   {
     velocity[1]-=100;
-    player.setVelocityY(-500);
+    player.body.setVelocityY(-500);
     if(rotationL===true && cursors.right.isDown===false || cursors.left.isDown)
     {
       weaponSwingL = true;
@@ -329,42 +340,42 @@ function update ()
   else if (cursors.left.isDown && cursors.right.isDown && player.body.blocked.down)
   {
     velocity[0]*=.7;
-    player.setVelocityX(velocity[0]);
+    player.body.setVelocityX(velocity[0]);
   }
   else if (cursors.left.isDown && player.body.blocked.down)
   {
     velocity[0]-=100;
-    player.setVelocityX(velocity[0]);
+    player.body.setVelocityX(velocity[0]);
   }
   else if (cursors.right.isDown && player.body.blocked.down)
   {
     velocity[0]+=100;
-    player.setVelocityX(velocity[0]);
+    player.body.setVelocityX(velocity[0]);
   } 
   else if (cursors.left.isDown && cursors.right.isDown && player.body.blocked.down===false)
   {
     velocity[0]*=.95;
-    player.setVelocityX(velocity[0]);
+    player.body.setVelocityX(velocity[0]);
   }
   else if (cursors.left.isDown && player.body.blocked.down===false)
   {
     velocity[0]-=50;
-    player.setVelocityX(velocity[0]);
+    player.body.setVelocityX(velocity[0]);
   }
   else if (cursors.right.isDown && player.body.blocked.down===false)
   {
     velocity[0]+=50;
-    player.setVelocityX(velocity[0]);
+    player.body.setVelocityX(velocity[0]);
   }
   else if (!player.body.blocked.down)
   {
     velocity[0]*=.95;
-    player.setVelocityX(velocity[0]);
+    player.body.setVelocityX(velocity[0]);
   }
   else
   {
     velocity[0]*=.7;
-    player.setVelocityX(velocity[0]);
+    player.body.setVelocityX(velocity[0]);
 
     //scrapped
     // if (rotationL==true)
@@ -380,18 +391,18 @@ function update ()
   if (cursors.up.isDown && player.body.blocked.down)
   {
     velocity[1]-=800;
-    player.setVelocityY(velocity[1]);
+    player.body.setVelocityY(velocity[1]);
   }
   else if (keyD.isDown&&player.body.blocked.down&&cursors.right.isDown&&cursors.left.isDown)
   {
     velocity[1]-=600;
-    player.setVelocityY(velocity[1]);
+    player.body.setVelocityY(velocity[1]);
     velocityCap=900;
   }
   else if (keyD.isDown&&player.body.blocked.down&&cursors.right.isDown)
   {
     velocity[1]-=600;
-    player.setVelocityY(velocity[1]);
+    player.body.setVelocityY(velocity[1]);
     velocityCap=800;
 
     velocity[0]=800;
@@ -400,11 +411,11 @@ function update ()
   else if (keyD.isDown&&player.body.blocked.down&&cursors.left.isDown)
   {
     velocity[1]-=600;
-    player.setVelocityY(velocity[1]);
+    player.body.setVelocityY(velocity[1]);
     velocityCap=800;
 
     velocity[0]=-800;
-    player.setVelocityX(velocity[0]);
+    player.body.setVelocityX(velocity[0]);
   }
 
   // velocity capps
@@ -561,8 +572,9 @@ function touchEnemy(player, tomato)
 
 function gameEnd(player, lime)
 {
-  player.destroy();
-  lime.destroy();
+  player.setVisible(false);
+  lime.setVisible(false);
   // TODO add hi five sprite
+  princesses.setVisible(true);
   this.scene.pause();
 }
