@@ -1,6 +1,6 @@
 let config = {
   type: Phaser.AUTO,
-  width: 11900,
+  width: 11920,
   height: 1080,
   physics: {
       default: 'arcade',
@@ -86,7 +86,7 @@ function create ()
 
   // background=this.physics.add.group();
   
-  this.add.rectangle(950,540,1900,1080,0x87CEEB,1).setScrollFactor(0);
+  this.add.rectangle(950,540,1920,1080,0x87CEEB,1).setScrollFactor(0);
   this.add.image(1500, backgroundplacement, 'mountain').setScrollFactor(.1);
   this.add.image(1500, backgroundplacement, 'clouds').setScrollFactor(.15);
 
@@ -232,8 +232,8 @@ function create ()
 
 
   // create camera
-  mainCamera=this.cameras.main.setSize(1900, 1080);
-  mainCamera.setBounds(0,0,11900,1080,false);
+  mainCamera=this.cameras.main.setSize(1920, 1080);
+  mainCamera.setBounds(0,0,11920,1080,false);
 
   // add collision
   this.physics.add.collider(player, platforms);
@@ -255,6 +255,11 @@ function create ()
 
 function update ()
 {
+  if (player.y>1000)
+  {
+    this.scene.pause();
+  }
+
   if (hitRot===false)
   {
     // rotton knight
