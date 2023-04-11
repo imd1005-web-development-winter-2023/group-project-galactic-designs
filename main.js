@@ -32,6 +32,7 @@ let hitDuri=false;
 let attackInAir=false;
 let loopTimes=0;
 let playerXLastFrame = 0;
+let playerXLastFrameTimer = 0;
 const backgroundplacement=600;
 
 let game = new Phaser.Game(config);
@@ -258,6 +259,22 @@ function create ()
 function update ()
 {
 
+  //prevents clipping it is extremely spagetti but i dont care at this point
+  if (player.x===playerXLastFrame&&player.body.blocked.down)
+  {
+    if (playerXLastFrameTimer==3)
+    {
+      playerXLastFrameTimer=0;
+    } else {
+      playerXLastFrameTimer++;
+      velocity[0]=0;
+      player.setVelocityX(velocity[0]);
+    }
+  } else 
+  {
+    playerXLastFrameTimer=0;
+  }//spaghetty stops here (or keeps going depending on how mean you are feeling today)
+
   if (player.y>1000)
   {
     this.scene.pause();
@@ -387,11 +404,6 @@ function update ()
 
     velocity[0]=-900;
     player.setVelocityX(velocity[0]);
-  }
-
-  if (player.x===playerXLastFrame&&player.body.blocked.down)
-  {
-    player.setVelocityX(0);
   }
 
   // velocity capps
