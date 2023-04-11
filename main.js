@@ -33,7 +33,6 @@ let attackInAir=false;
 let loopTimes=0;
 const backgroundplacement=600;
 
-
 let game = new Phaser.Game(config);
 
 function preload ()
