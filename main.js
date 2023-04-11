@@ -75,7 +75,7 @@ function preload ()
    
   this.load.spritesheet('durian',
   'images/Durian_SpriteSheet.png',
-  {frameWidth: 135, frameHeight: 120});
+  {frameWidth: 133, frameHeight: 120});
 
   this.load.tilemapTiledJSON('tilemap', 'json/map.json');
 }
@@ -102,9 +102,9 @@ function create ()
 
   this.add.image(1500, backgroundplacement, 'trees1').setScrollFactor(.9);
 
-  const map = this.make.tilemap({ key: 'tilemap', tilewidth: 128, tileheight: 128});
+  const map = this.make.tilemap({ key: 'tilemap', tilewidth: 64, tileheight: 64});
   const tileset = map.addTilesetImage('tiles', 'tiles');
-  platforms = map.createLayer('Foreground', tileset);
+  const platforms = map.createLayer('Foreground', tileset);
   platforms.setCollisionByExclusion([-1]);
   map.createLayer('Background', tileset);
 
@@ -250,15 +250,12 @@ function create ()
   this.physics.add.overlap(weapon, durian, hitEnemy, null, this);
   this.physics.add.overlap(player, lime, gameEnd, null, this);
 
-  player.body.onWorldBounds
-
   // for movement of character
   cursors = this.input.keyboard.createCursorKeys();
 }
 
 function update ()
 {
-
   //prevents clipping it is extremely spagetti but i dont care at this point
   if (player.x===playerXLastFrame&&player.body.blocked.down)
   {
