@@ -126,6 +126,19 @@
         {
          "firstgid":148,
          "source":"..\/tiles.tsx"
+        }, 
+        {
+         "columns":37,
+         "firstgid":185,
+         "image":"..\/Tiles\/tiles.png",
+         "imageheight":64,
+         "imagewidth":2368,
+         "margin":0,
+         "name":"tiles",
+         "spacing":0,
+         "tilecount":37,
+         "tileheight":64,
+         "tilewidth":64
         }],
  "tilewidth":64,
  "type":"map",
