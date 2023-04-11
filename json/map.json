@@ -73,22 +73,36 @@
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.10.1",
- "tileheight":16,
+ "tileheight":128,
  "tilesets":[
         {
          "columns":37,
+         "fillmode":"preserve-aspect-fit",
          "firstgid":1,
-         "image":"..\/Tiles\/tiles.png",
-         "imageheight":16,
-         "imagewidth":592,
+         "image":"..\/tiles.png",
+         "imageheight":128,
+         "imagewidth":4736,
+         "margin":0,
+         "name":"tiles",
+         "spacing":0,
+         "tilecount":2368,
+         "tileheight":128,
+         "tilewidth":128
+        }, 
+        {
+         "columns":37,
+         "firstgid":2369,
+         "image":"..\/tiles.png",
+         "imageheight":128,
+         "imagewidth":4736,
          "margin":0,
          "name":"tiles",
          "spacing":0,
          "tilecount":37,
-         "tileheight":16,
-         "tilewidth":16
+         "tileheight":128,
+         "tilewidth":128
         }],
- "tilewidth":16,
+ "tilewidth":128,
  "type":"map",
  "version":"1.10",
  "width":223
