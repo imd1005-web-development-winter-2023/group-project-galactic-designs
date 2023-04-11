@@ -32,12 +32,12 @@ let cameraSmooth=0;
 const cameraCap=150;
 let hitRot=false;
 let hitTo=false;
-let hitDuri=false;
-let attackInAir=false;
-let loopTimes=0;
-let playerXLastFrame = 0;
-let playerXLastFrameTimer = 0;
-const backgroundplacement=600;
+let toTimer = 0;
+let hitDuri = false;
+let attackInAir = false;
+let loopTimes = 0;
+let playerXLastFrame = 0; 
+const backgroundplacement = 600;
 
 let game = new Phaser.Game(config);
 
@@ -87,11 +87,7 @@ function preload ()
 
 function create ()
 {
-
   //make sky
-  // this.add.image(950, 540, 'sky').setScale(17);
-
-  // background=this.physics.add.group();
   
   this.add.rectangle(950,540,1920,1080,0x87CEEB,1).setScrollFactor(0);
   this.add.image(1500, backgroundplacement, 'mountain').setScrollFactor(.1);
@@ -99,13 +95,23 @@ function create ()
 
   this.add.image(1200, backgroundplacement, 'melon').setScale(.8).setScrollFactor(.5);
   this.add.image(3000, backgroundplacement, 'melon').setScrollFactor(.5);
-  this.add.image(51, backgroundplacement, 'melon').setScrollFactor(.5);
+  this.add.image(4600, backgroundplacement, 'melon').setScrollFactor(.5);
+  this.add.image(5900, backgroundplacement, 'melon').setScrollFactor(.5);
+  this.add.image(7300, backgroundplacement, 'melon').setScrollFactor(.5);
+
   this.add.image(1003, backgroundplacement, 'bana').setScrollFactor(.5);
   this.add.image(2300, backgroundplacement, 'bana').setScrollFactor(.5);
   this.add.image(3500, backgroundplacement, 'bana').setScrollFactor(.5);
+  this.add.image(5500, backgroundplacement, 'bana').setScrollFactor(.5);
+  this.add.image(6300, backgroundplacement, 'bana').setScrollFactor(.5);
+  this.add.image(7800, backgroundplacement, 'bana').setScrollFactor(.5);
+  this.add.image(9000, backgroundplacement, 'bana').setScrollFactor(.5);
 
-
-  this.add.image(1500, backgroundplacement, 'trees1').setScrollFactor(.9);
+  this.add.image(1500, backgroundplacement, 'trees1').setScrollFactor(.85);
+  this.add.image(4000, backgroundplacement, 'trees1').setScrollFactor(.85);
+  this.add.image(6500, backgroundplacement, 'trees1').setScrollFactor(.85);
+  this.add.image(8500, backgroundplacement, 'trees1').setScrollFactor(.85);
+  this.add.image(10500, backgroundplacement, 'trees1').setScrollFactor(.85);
 
   const map = this.make.tilemap({ key: 'tilemap', tilewidth: 64, tileheight: 64});
   const tileset = map.addTilesetImage('tiles', 'tiles');
@@ -176,13 +182,14 @@ function create ()
     frames: this.anims.generateFrameNumbers('lemon', { start: 19, end: 20 }),
     frameRate: 5
   });
+  player.body.setMaxVelocityY(900);
 
   // rotton
-  rotton = this.physics.add.sprite(300,800,'rotton');
+  rotton = this.physics.add.sprite(13500,800,'rotton');
 
   this.anims.create({
     key: 'rotTurnL',
-    frames: [ { key: 'rotton', frame: 5 } ],
+    frames: [ { key: 'rotton', frame: 6 } ],
     frameRate: 1
   });
   this.anims.create({
@@ -206,10 +213,9 @@ function create ()
     frameRate: 10
   });
 
-  player.body.setMaxVelocityY(1000);
 
   // tomato
-  tomato = this.physics.add.sprite(500,800,'tomato');
+  tomato = this.physics.add.sprite(1200,800,'tomato');
 
   this.anims.create({
     key: 'tomaWalkR',
@@ -222,18 +228,18 @@ function create ()
     frameRate: 5
   });
 
-  tomato.setVelocityX(100);
+  tomato.setVelocityX(-100);
 
   // durian
-  durian = this.physics.add.sprite(700,800,'durian');
+  durian = this.physics.add.sprite(8500,500,'durian');
 
   this.anims.create({
     key: 'duriWalkR',
     frames: this.anims.generateFrameNumbers('durian', { start: 0, end: 3 }),
-    frameRate: 2
+    frameRate: 0
   });
 
-  durian.setVelocityX(50).setSize(100,120);
+  durian.setVelocityX(0).setSize(100,120);
 
   lime = this.physics.add.image(14000,930,'lime');
   lime = this.physics.add.existing(lime,0);
@@ -271,22 +277,12 @@ function update ()
   //prevents clipping it is extremely spagetti but i dont care at this point
   if (player.x===playerXLastFrame)
   {
-    if (playerXLastFrameTimer==1)
-    {
-      playerXLastFrameTimer=0;
-    } else {
-      console.log("");
-      playerXLastFrameTimer++;
       velocity[0]=0;
       velocity[1]=0;
       player.body.setVelocityX(velocity[0]);
-    }
-  }
-  else 
-  {
-    playerXLastFrameTimer=0;
   }//spaghetty stops here (or keeps going depending on how mean you are feeling today)
 
+  // fall dedection 
   if (player.y>1000)
   {
     this.scene.pause();
@@ -295,8 +291,8 @@ function update ()
   if (hitRot===false)
   {
     // rotton knight
-    rotton.anims.play('rotWalkR',true);
-    rotton.setVelocityX(100);
+    rotton.anims.play('rotTurnL');
+    rotton.setVelocityX(0);
   } else if (rotton.body.blocked.down)
   {
     rotton.setVelocityX(0);
@@ -304,7 +300,7 @@ function update ()
 
   if (hitTo===false)
   {
-    tomato.anims.play('tomaWalkR',true);
+    tomato.anims.play('tomaWalkL',true);
   }
 
   if (hitDuri===false)
@@ -376,16 +372,6 @@ function update ()
   {
     velocity[0]*=.7;
     player.body.setVelocityX(velocity[0]);
-
-    //scrapped
-    // if (rotationL==true)
-    // {
-    //   player.anims.play('turnL');
-    // }
-    // else
-    // {
-    //   player.anims.play('turnR');
-    // }
   }
 
   if (cursors.up.isDown && player.body.blocked.down)
