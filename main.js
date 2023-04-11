@@ -10,7 +10,7 @@ let config = {
       },
       tileBias: 64,
       fixedStep: true,
-      fps: 60,
+      fps: 30,
   },
   scene: {
       preload: preload,
@@ -88,7 +88,6 @@ function preload ()
 function create ()
 {
   //make sky
-  
   this.add.rectangle(950,540,1920,1080,0x87CEEB,1).setScrollFactor(0);
   this.add.image(1500, backgroundplacement, 'mountain').setScrollFactor(.1);
   this.add.image(1500, backgroundplacement, 'clouds').setScrollFactor(.15);
