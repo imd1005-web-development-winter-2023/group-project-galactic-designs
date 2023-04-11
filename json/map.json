@@ -90,8 +90,8 @@
          "name":"tiles",
          "spacing":0,
          "tilecount":0,
-         "tileheight":128,
-         "tilewidth":128
+         "tileheight":64,
+         "tilewidth":64
         }, 
         {
          "columns":37,
