@@ -102,16 +102,17 @@ function create ()
 
   const map = this.make.tilemap({ key: 'tilemap', tilewidth: 128, tileheight: 128});
   const tileset = map.addTilesetImage('tiles', 'tiles');
-  map.createLayer('Foreground', tileset);
+  platforms = map.createLayer('Foreground', tileset);
+  platforms.setCollisionByExclusion([-1]);
   map.createLayer('Background', tileset);
 
 
 
   // background.children.allowGravity = false;
 
-  platforms = this.physics.add.staticGroup();
+  // platforms = this.physics.add.staticGroup();
 
-  platforms.create(950, 1000, 'ground').setScale(10).refreshBody();
+  // platforms.create(950, 1000, 'ground').setScale(10).refreshBody();
 
   //player create
   player = this.physics.add.sprite(100, 350, 'lemon');
@@ -236,10 +237,10 @@ function create ()
   mainCamera.setBounds(0,0,11920,1080,false);
 
   // add collision
-  this.physics.add.collider(player, platforms);
   this.physics.add.collider(rotton, platforms);
   this.physics.add.collider(tomato, platforms);
-  this.physics.add.collider(durian,platforms);
+  this.physics.add.collider(durian, platforms);
+  this.physics.add.collider(player, platforms);
   this.physics.add.overlap(player, tomato, touchEnemy, null, this);
   this.physics.add.overlap(player, durian, touchEnemy, null, this);
   this.physics.add.overlap(weapon, rotton, touchRotton, null, this);
@@ -255,6 +256,7 @@ function create ()
 
 function update ()
 {
+
   if (player.y>1000)
   {
     this.scene.pause();
@@ -265,7 +267,7 @@ function update ()
     // rotton knight
     rotton.anims.play('rotWalkR',true);
     rotton.setVelocityX(100);
-  }else if (rotton.body.touching.down)
+  }else if (rotton.body.blocked.down)
   {
     rotton.setVelocityX(0);
   }
@@ -281,7 +283,7 @@ function update ()
   }
 
   // player physics
-  if (player.body.touching.down)
+  if (player.body.blocked.down)
   {
     velocityCap=600;
     velocity[1]=0;
@@ -305,37 +307,37 @@ function update ()
     attackInAir=true;
     loopTimes=1;
   }
-  else if (cursors.left.isDown && cursors.right.isDown && player.body.touching.down)
+  else if (cursors.left.isDown && cursors.right.isDown && player.body.blocked.down)
   {
     velocity[0]*=.7;
     player.setVelocityX(velocity[0]);
   }
-  else if (cursors.left.isDown && player.body.touching.down)
+  else if (cursors.left.isDown && player.body.blocked.down)
   {
     velocity[0]-=100;
     player.setVelocityX(velocity[0]);
   }
-  else if (cursors.right.isDown && player.body.touching.down)
+  else if (cursors.right.isDown && player.body.blocked.down)
   {
     velocity[0]+=100;
     player.setVelocityX(velocity[0]);
   } 
-  else if (cursors.left.isDown && cursors.right.isDown && player.body.touching.down===false)
+  else if (cursors.left.isDown && cursors.right.isDown && player.body.blocked.down===false)
   {
     velocity[0]*=.95;
     player.setVelocityX(velocity[0]);
   }
-  else if (cursors.left.isDown && player.body.touching.down===false)
+  else if (cursors.left.isDown && player.body.blocked.down===false)
   {
     velocity[0]-=50;
     player.setVelocityX(velocity[0]);
   }
-  else if (cursors.right.isDown && player.body.touching.down===false)
+  else if (cursors.right.isDown && player.body.blocked.down===false)
   {
     velocity[0]+=50;
     player.setVelocityX(velocity[0]);
   }
-  else if (!player.body.touching.down)
+  else if (!player.body.blocked.down)
   {
     velocity[0]*=.95;
     player.setVelocityX(velocity[0]);
@@ -356,18 +358,18 @@ function update ()
     // }
   }
 
-  if (cursors.up.isDown && player.body.touching.down)
+  if (cursors.up.isDown && player.body.blocked.down)
   {
     velocity[1]-=800;
     player.setVelocityY(velocity[1]);
   }
-  else if (keyD.isDown&&player.body.touching.down&&cursors.right.isDown&&cursors.left.isDown)
+  else if (keyD.isDown&&player.body.blocked.down&&cursors.right.isDown&&cursors.left.isDown)
   {
     velocity[1]-=600;
     player.setVelocityY(velocity[1]);
     velocityCap=900;
   }
-  else if (keyD.isDown&&player.body.touching.down&&cursors.right.isDown)
+  else if (keyD.isDown&&player.body.blocked.down&&cursors.right.isDown)
   {
     velocity[1]-=600;
     player.setVelocityY(velocity[1]);
@@ -376,7 +378,7 @@ function update ()
     velocity[0]=900;
     player.setVelocityX(velocity[0]);
   }
-  else if (keyD.isDown&&player.body.touching.down&&cursors.left.isDown)
+  else if (keyD.isDown&&player.body.blocked.down&&cursors.left.isDown)
   {
     velocity[1]-=600;
     player.setVelocityY(velocity[1]);
@@ -433,27 +435,27 @@ function update ()
       player.anims.play('swingRight',true);
     }
   }
-  else if(player.body.touching.down===true && velocity[0]<-3)
+  else if(player.body.blocked.down===true && velocity[0]<-3)
   {
     player.anims.play('left',true);
   }
-  else if(player.body.touching.down===true && velocity[0]>3)
+  else if(player.body.blocked.down===true && velocity[0]>3)
   {
     player.anims.play('right',true);
   }
-  else if(player.body.touching.down===true && rotationL===true)
+  else if(player.body.blocked.down===true && rotationL===true)
   {
     player.anims.play('turnL');
   }
-  else if(player.body.touching.down===true && rotationL===false)
+  else if(player.body.blocked.down===true && rotationL===false)
   {
     player.anims.play('turnR');
   }
-  else if(player.body.touching.down===false && rotationL===true)
+  else if(player.body.blocked.down===false && rotationL===true)
   {
     player.anims.play('jump1L',true);
   }
-  else if(player.body.touching.down===false && rotationL===false)
+  else if(player.body.blocked.down===false && rotationL===false)
   {
     player.anims.play('jump1R',true);
   }
