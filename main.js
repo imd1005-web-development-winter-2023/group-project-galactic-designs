@@ -257,9 +257,9 @@ function create ()
 function update ()
 {
   //prevents clipping it is extremely spagetti but i dont care at this point
-  if (player.x===playerXLastFrame&&player.body.blocked.down)
+  if (player.x===playerXLastFrame)
   {
-    if (playerXLastFrameTimer==3)
+    if (playerXLastFrameTimer==6)
     {
       playerXLastFrameTimer=0;
     } else {
