@@ -58,9 +58,6 @@ function preload ()
 
   //load tile
   this.load.image('tiles', 'images/tiles.png');
-
-  //weapon hitbox test
-  this.load.image('weapon', 'images/weapon-hitbox test.png');
   
   //load spritesheet
   this.load.spritesheet('lemon', 
@@ -104,7 +101,7 @@ function create ()
 
   this.add.image(1500, backgroundplacement, 'trees1').setScrollFactor(.9);
 
-  const map = this.make.tilemap({ key: 'tilemap',tilewidth: 128,tileheight: 128});
+  const map = this.make.tilemap({ key: 'tilemap', tilewidth: 128, tileheight: 128});
   const tileset = map.addTilesetImage('tiles', 'tiles');
   map.createLayer('Foreground', tileset);
   map.createLayer('Background', tileset);
