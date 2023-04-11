@@ -31,6 +31,7 @@ let hitTo=false;
 let hitDuri=false;
 let attackInAir=false;
 let loopTimes=0;
+let playerXLastFrame = 0;
 const backgroundplacement=600;
 
 let game = new Phaser.Game(config);
@@ -267,7 +268,7 @@ function update ()
     // rotton knight
     rotton.anims.play('rotWalkR',true);
     rotton.setVelocityX(100);
-  }else if (rotton.body.blocked.down)
+  } else if (rotton.body.blocked.down)
   {
     rotton.setVelocityX(0);
   }
@@ -388,6 +389,11 @@ function update ()
     player.setVelocityX(velocity[0]);
   }
 
+  if (player.x===playerXLastFrame)
+  {
+    player.setVelocityX(0);
+  }
+
   // velocity capps
   if (velocity[0]>velocityCap) 
   {
@@ -494,6 +500,9 @@ function update ()
     this.physics.world.remove(weapon.body);
     loopTimes=0;
   }
+
+  // record player.x for next frame
+  player.x=playerXLastFrame;
 }
 
 function touchRotton(player, rotton)
