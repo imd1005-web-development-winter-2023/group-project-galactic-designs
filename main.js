@@ -1,6 +1,6 @@
 let config = {
   type: Phaser.AUTO,
-  width: 11920,
+  width: 15360,
   height: 1080,
   physics: {
       default: 'arcade',
@@ -22,6 +22,7 @@ let cursors;
 //velocity[0] is velocity x and velocity[1] is velocity y
 let velocity = [0,0];
 let velocityCap=600;
+const velocityYCap=800;
 let rotationL=false;
 let weaponSwingL=false;
 let cameraSmooth=0;
@@ -259,15 +260,18 @@ function update ()
   //prevents clipping it is extremely spagetti but i dont care at this point
   if (player.x===playerXLastFrame)
   {
-    if (playerXLastFrameTimer==6)
+    if (playerXLastFrameTimer==2)
     {
       playerXLastFrameTimer=0;
     } else {
+      console.log("");
       playerXLastFrameTimer++;
       velocity[0]=0;
+      velocity[1]=0;
       player.setVelocityX(velocity[0]);
     }
-  } else 
+  }
+  else 
   {
     playerXLastFrameTimer=0;
   }//spaghetty stops here (or keeps going depending on how mean you are feeling today)
@@ -388,18 +392,18 @@ function update ()
   {
     velocity[1]-=600;
     player.setVelocityY(velocity[1]);
-    velocityCap=900;
+    velocityCap=800;
 
-    velocity[0]=900;
+    velocity[0]=800;
     player.setVelocityX(velocity[0]);
   }
   else if (keyD.isDown&&player.body.blocked.down&&cursors.left.isDown)
   {
     velocity[1]-=600;
     player.setVelocityY(velocity[1]);
-    velocityCap=900;
+    velocityCap=800;
 
-    velocity[0]=-900;
+    velocity[0]=-800;
     player.setVelocityX(velocity[0]);
   }
 
@@ -411,6 +415,14 @@ function update ()
   if (velocity[0]<-velocityCap)
   {
     velocity[0]=-velocityCap;
+  }
+  if (velocity[1]<-velocityYCap)
+  {
+    velocity[1]=-velocityYCap;
+  }
+  if (velocity[1]<-velocityYCap)
+  {
+    velocity[1]=-velocityYCap;
   }
 
   // setting rotation
