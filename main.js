@@ -56,6 +56,8 @@ function preload ()
   this.load.image('mountain', 'Background_Layers/mountains.png');
   this.load.image('lime', 'images/Lime_Large.png');
 
+  //load tile
+  this.load.image('tiles', 'images/tiles.png');
 
   //weapon hitbox test
   this.load.image('weapon', 'images/weapon-hitbox test.png');
@@ -76,6 +78,8 @@ function preload ()
   this.load.spritesheet('durian',
   'images/Durian_SpriteSheet.png',
   {frameWidth: 135, frameHeight: 120});
+
+  this.load.tilemapTiledJSON('tilemap', 'json/map.json');
 }
 
 function create ()
@@ -99,6 +103,9 @@ function create ()
 
 
   this.add.image(1500, backgroundplacement, 'trees1').setScrollFactor(.9);
+
+  this.make.tilemap({ key: 'tilemap',tilewidth: 16,tileheight: 16});
+  const tileset = map.addTilesetImage('tiles', 'tiles');
 
 
   // background.children.allowGravity = false;
