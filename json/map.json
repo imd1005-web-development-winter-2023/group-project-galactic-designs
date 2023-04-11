@@ -1,4 +1,12 @@
 { "compressionlevel":-1,
+ "editorsettings":
+    {
+     "chunksize":
+        {
+         "height":128,
+         "width":128
+        }
+    },
  "height":18,
  "infinite":false,
  "layers":[
