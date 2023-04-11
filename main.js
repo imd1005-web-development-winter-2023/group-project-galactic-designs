@@ -389,7 +389,7 @@ function update ()
     player.setVelocityX(velocity[0]);
   }
 
-  if (player.x===playerXLastFrame)
+  if (player.x===playerXLastFrame&&player.body.blocked.down)
   {
     player.setVelocityX(0);
   }
@@ -502,7 +502,7 @@ function update ()
   }
 
   // record player.x for next frame
-  player.x=playerXLastFrame;
+  playerXLastFrame=player.x;
 }
 
 function touchRotton(player, rotton)
