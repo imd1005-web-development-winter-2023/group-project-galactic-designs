@@ -104,8 +104,9 @@ function create ()
 
   this.add.image(1500, backgroundplacement, 'trees1').setScrollFactor(.9);
 
-  this.make.tilemap({ key: 'tilemap',tilewidth: 16,tileheight: 16});
+  const map = this.make.tilemap({ key: 'tilemap',tilewidth: 128,tileheight: 128});
   const tileset = map.addTilesetImage('tiles', 'tiles');
+  map.createLayer('Foreground', tileset);
 
 
   // background.children.allowGravity = false;
