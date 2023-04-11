@@ -107,7 +107,8 @@ function create ()
   const map = this.make.tilemap({ key: 'tilemap',tilewidth: 128,tileheight: 128});
   const tileset = map.addTilesetImage('tiles', 'tiles');
   map.createLayer('Foreground', tileset);
-  
+  map.createLayer('Background', tileset);
+
 
 
   // background.children.allowGravity = false;
