@@ -239,7 +239,7 @@ function create ()
     frameRate: 0
   });
 
-  durian.setVelocityX(0).setSize(100,120);
+  durian.setVelocityX(0).setSize(100,120).setFlipX(true);
 
   lime = this.physics.add.image(14000,930,'lime');
   lime = this.physics.add.existing(lime,0);
